@@ -1,85 +1,71 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import PushNotification from './components/PushNotification.vue'
+import { usePushesStore } from "./stores/push"
+import { computed, onMounted } from "vue"
+
+const pushesStore = usePushesStore()
+
+const allPushes = computed(() => {
+  return pushesStore.pushes.slice().reverse()
+})
+
+onMounted(() => {
+
+  pushesStore.reset()
+
+  pushesStore.addPush({
+    id: "msg-dima",
+    iconSrc: "https://raw.githubusercontent.com/WebDevPie/Create-iOS-Push-Notifications-Popup-HTML-CSS-and-JavaScript/master/img/icon-ios-msg.png",
+    title: "Messages",
+    time: "1d ago",
+    person: "John Smith",
+    message: "Are you listening?",
+  })
+
+  pushesStore.addPush({
+    id: "yt",
+    iconSrc: "https://uploads-ssl.webflow.com/61fd00481f4b997da0ec34e3/62947eb4354f097a75cb3668_yt.png",
+    title: "youtube",
+    time: "6h ago",
+    person: "LTT posted a new video",
+    message: "Watch video 'How many GPUs can fit into...'",
+  })
+
+})
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+  <div class="push__wrapper">
+    <TransitionGroup name="bounce">
+        <PushNotification
+            v-for="push in allPushes"
+            :key="push.id"
+            v-bind="push"
+        />
+    </TransitionGroup>
+  </div>
 
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+<style lang="scss">
+@import url('https://fonts.cdnfonts.com/css/sf-pro-display');
+@import "./assets/push.scss";
+@import "./assets/transition-bounce.css";
+
+* {
+  margin: 0;
+  padding: 0;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+body {
+  font-family: 'SF Pro Display', sans-serif;
+  font-size: 16px;
+  color: #222;
+  background-image: url(https://raw.githubusercontent.com/WebDevPie/Create-iOS-Push-Notifications-Popup-HTML-CSS-and-JavaScript/master/img/iphone-14-2560x1440-abstract-ios-16-hd-24001.jpg);
+  background-repeat: no-repeat;
+  background-position: top;
+  background-size: 200vh;
 }
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
 </style>
