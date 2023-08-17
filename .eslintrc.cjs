@@ -9,6 +9,11 @@ module.exports = {
     '@vue/eslint-config-typescript'
   ],
   parserOptions: {
-    ecmaVersion: 'latest'
+    ecmaVersion: 'latest',
+  },
+  rules: {
+    "object-curly-spacing": ["error", "always"],
+    semi: ['error', 'never'],
+    'no-multi-spaces': ['error', { ignoreEOLComments: true }],
   }
 }
